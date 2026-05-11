@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday, My Love 💛</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #d4af6e;
+    --gold-soft: #e8cf9a;
+    --rose: #c9748a;
+    --cream: #f5f0e8;
+    --deep: #0a0710;
+    --mid: #140f1e;
+    --glow: rgba(212, 175, 110, 0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed; width: 10px; height: 10px;
+    border-radius: 50%; background: var(--gold);
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border-radius: 50%; border: 1px solid rgba(212,175,110,0.5);
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: left 0.12s ease-out, top 0.12s ease-out;
+  }
+
+  /* Canvas */
+  #bgCanvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
+  }
+
+  /* Sections */
+  section {
+    position: relative; z-index: 2;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 5rem 2rem;
+  }
+
+  /* ---- HERO ---- */
+  #hero { text-align: center; }
+
+  .pre-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(10px, 1.2vw, 13px);
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+
+  .main-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.8rem, 8vw, 7rem);
+    font-weight: 600;
+    color: var(--gold-soft);
+    line-height: 1.1;
+    opacity: 0;
+    animation: fadeUp 1.2s 0.9s forwards;
+    text-shadow: 0 0 80px rgba(212,175,110,0.3);
+  }
+
+  .subtitle-hero {
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    font-style: italic;
+    color: rgba(245,240,232,0.65);
+    margin-top: 1rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.4s forwards;
+    letter-spacing: 0.04em;
+  }
+
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    opacity: 0; animation: fadeUp 1s 2.2s forwards;
+    cursor: default;
+  }
+  .scroll-hint span { font-size: 11px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; }
+  .scroll-arrow {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3;transform:scaleY(0.8)} 50%{opacity:1;transform:scaleY(1)} }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 2.5rem 0;
+    width: min(500px, 90vw);
+  }
+  .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+  .divider-gem {
+    width: 8px; height: 8px; background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  /* ---- LOVE LETTER ---- */
+  #letter { max-width: 680px; width: 100%; margin: 0 auto; }
+
+  .letter-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(212,175,110,0.2);
+    border-radius: 2px;
+    padding: clamp(2rem, 5vw, 4rem);
+    position: relative;
+    box-shadow: 0 0 80px rgba(212,175,110,0.06), inset 0 0 60px rgba(0,0,0,0.3);
+  }
+  .letter-card::before {
+    content: ''; position: absolute;
+    inset: 6px; border: 1px solid rgba(212,175,110,0.08);
+    border-radius: 1px; pointer-events: none;
+  }
+
+  .letter-salutation {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+
+  .letter-body p {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: 1.9;
+    color: rgba(245,240,232,0.88);
+    margin-bottom: 1.25rem;
+    font-weight: 300;
+  }
+  .letter-body em { color: var(--gold-soft); font-style: italic; }
+
+  .letter-sign {
+    margin-top: 2rem;
+    text-align: right;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: rgba(245,240,232,0.6);
+  }
+  .letter-sign strong { color: var(--gold); font-style: normal; font-weight: 400; }
+
+  /* ---- REASONS ---- */
+  #reasons { text-align: center; }
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(9px, 1.1vw, 12px);
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .section-heading {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.6rem, 4vw, 3rem);
+    color: var(--gold-soft);
+    margin-bottom: 3rem;
+    font-weight: 400;
+  }
+
+  .reasons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    max-width: 860px; width: 100%;
+  }
+
+  .reason-card {
+    background: rgba(212,175,110,0.04);
+    border: 1px solid rgba(212,175,110,0.15);
+    border-radius: 2px;
+    padding: 1.75rem 1.5rem;
+    text-align: left;
+    transition: background 0.35s, border-color 0.35s, transform 0.35s;
+    cursor: default;
+  }
+  .reason-card:hover {
+    background: rgba(212,175,110,0.09);
+    border-color: rgba(212,175,110,0.45);
+    transform: translateY(-4px);
+  }
+  .reason-num {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem; color: rgba(212,175,110,0.25);
+    line-height: 1; margin-bottom: 0.75rem;
+  }
+  .reason-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem; letter-spacing: 0.08em;
+    color: var(--gold); margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .reason-text { font-size: 1rem; line-height: 1.75; color: rgba(245,240,232,0.7); font-weight: 300; }
+
+  /* ---- WISH ---- */
+  #wish { text-align: center; max-width: 700px; margin: 0 auto; }
+
+  .wish-quote {
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+    font-style: italic;
+    line-height: 1.7;
+    color: rgba(245,240,232,0.9);
+    font-weight: 300;
+    position: relative;
+  }
+  .wish-quote::before {
+    content: '\201C';
+    font-size: 6rem; line-height: 0;
+    position: absolute; top: 1rem; left: -2rem;
+    color: rgba(212,175,110,0.15);
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* ---- FINALE ---- */
+  #finale { text-align: center; position: relative; }
+
+  .finale-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 6vw, 5rem);
+    color: var(--gold-soft);
+    font-weight: 600;
+    text-shadow: 0 0 60px rgba(212,175,110,0.4);
+  }
+  .finale-sub {
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    font-style: italic;
+    color: rgba(245,240,232,0.55);
+    margin-top: 1rem;
+  }
+
+  .celebrate-btn {
+    margin-top: 2.5rem;
+    padding: 1rem 2.75rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s, transform 0.2s, box-shadow 0.3s;
+  }
+  .celebrate-btn:hover {
+    background: var(--gold);
+    color: var(--deep);
+    transform: scale(1.04);
+    box-shadow: 0 0 40px rgba(212,175,110,0.35);
+  }
+
+  /* ---- Animations ---- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ---- PHOTO ---- */
+  #photo { min-height: auto; padding: 4rem 2rem; }
+
+  .photo-frame {
+    max-width: 380px; width: 100%;
+    position: relative;
+  }
+  .photo-frame::before, .photo-frame::after {
+    content: ''; position: absolute;
+    border: 1px solid rgba(212,175,110,0.25);
+    pointer-events: none;
+  }
+  .photo-frame::before { inset: -12px; }
+  .photo-frame::after  { inset: -22px; }
+
+  .photo-inner {
+    position: relative; aspect-ratio: 4/5;
+    overflow: hidden;
+    background: rgba(212,175,110,0.04);
+    border: 1px solid rgba(212,175,110,0.2);
+  }
+  .beloved-photo {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: sepia(12%) contrast(1.06) brightness(0.95);
+    transition: transform 0.7s ease;
+  }
+  .beloved-photo:hover { transform: scale(1.04); }
+
+  .photo-placeholder {
+    display: none; width: 100%; height: 100%;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 1rem;
+    color: rgba(212,175,110,0.35);
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem; letter-spacing: 0.12em;
+    text-align: center; padding: 2rem;
+  }
+  .photo-placeholder .ph-icon { font-size: 2.5rem; }
+
+  .photo-caption {
+    margin-top: 2rem; text-align: center;
+    font-style: italic; font-size: 1rem;
+    color: rgba(245,240,232,0.45); letter-spacing: 0.04em;
+  }
+
+  /* ---- MUSIC BUTTON ---- */
+  .music-btn {
+    position: fixed; bottom: 2rem; right: 2rem;
+    width: 50px; height: 50px; border-radius: 50%;
+    background: rgba(10,7,16,0.7);
+    border: 1px solid rgba(212,175,110,0.35);
+    color: var(--gold); font-size: 1.25rem;
+    cursor: pointer; z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.3s, border-color 0.3s, transform 0.2s;
+    backdrop-filter: blur(6px);
+  }
+  .music-btn:hover {
+    background: rgba(212,175,110,0.12);
+    border-color: var(--gold); transform: scale(1.1);
+  }
+  .music-btn.active { border-color: var(--gold); background: rgba(212,175,110,0.1); }
+  .music-btn.active .m-icon { animation: musicPulse 1.6s ease-in-out infinite; display: inline-block; }
+  @keyframes musicPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+
+  /* Firework canvas */
+  #fwCanvas {
+    position: fixed; inset: 0;
+    z-index: 100; pointer-events: none;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<canvas id="bgCanvas"></canvas>
+<canvas id="fwCanvas"></canvas>
+
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Play music">
+  <span class="m-icon">♪</span>
+</button>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="pre-title">A message from the heart</p>
+  <h1 class="main-title">Happy Birthday</h1>
+  <p class="subtitle-hero">to the one who makes every day feel like home</p>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- PHOTO -->
+<section id="photo">
+  <div class="photo-frame reveal">
+    <div class="photo-inner">
+      <img src="your-photo.jpg" alt="My beloved" class="beloved-photo"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-placeholder">
+        <span class="ph-icon">✦</span>
+        <span>Replace src="your-photo.jpg"<br>with your image path</span>
+      </div>
+    </div>
+    <p class="photo-caption">Every moment with you is a photograph I keep in my heart</p>
+  </div>
+</section>
+
+<!-- LETTER -->
+<section id="letter">
+  <div class="letter-card reveal">
+    <p class="letter-salutation">My Dearest,</p>
+    <div class="letter-body">
+      <p>On this day, the universe decided to gift the world something <em>irreplaceable</em> — you. And somehow, I got lucky enough to know you, to be with you, to call you mine.</p>
+      <p>You are the kind of person who makes the ordinary feel <em>extraordinary</em>. Your laugh rewrites my bad days. Your presence turns any place into somewhere I want to stay forever.</p>
+      <p>So today, on your birthday, I want you to know — <em>every single year of your life has been a gift to everyone around you,</em> but most of all, to me.</p>
+    </div>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-gem"></div>
+      <div class="divider-line"></div>
+    </div>
+    <div class="letter-sign">
+      With all my love,<br>
+      <strong>Your Person 💛</strong>
+    </div>
+  </div>
+</section>
+
+<!-- REASONS -->
+<section id="reasons">
+  <p class="section-label reveal">Why you are loved</p>
+  <h2 class="section-heading reveal">The list never ends, but here's a start</h2>
+  <div class="reasons-grid">
+    <div class="reason-card reveal">
+      <div class="reason-num">01</div>
+      <div class="reason-title">Your Mind</div>
+      <p class="reason-text">The way you think, solve, and create is endlessly fascinating to me. You're brilliant without even trying.</p>
+    </div>
+    <div class="reason-card reveal">
+      <div class="reason-num">02</div>
+      <div class="reason-title">Your Heart</div>
+      <p class="reason-text">You care so deeply and so genuinely. The world is softer because you're in it.</p>
+    </div>
+    <div class="reason-card reveal">
+      <div class="reason-num">03</div>
+      <div class="reason-title">Your Laugh</div>
+      <p class="reason-text">It's my favourite sound. I'd move mountains just to hear it every day.</p>
+    </div>
+    <div class="reason-card reveal">
+      <div class="reason-num">04</div>
+      <div class="reason-title">Your Strength</div>
+      <p class="reason-text">The quiet resilience you carry — it inspires me more than you'll ever know.</p>
+    </div>
+    <div class="reason-card reveal">
+      <div class="reason-num">05</div>
+      <div class="reason-title">Just You</div>
+      <p class="reason-text">All of it. The big things, the tiny things, the things only I get to see. All of you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WISH -->
+<section id="wish">
+  <div class="divider reveal"><div class="divider-line"></div><div class="divider-gem"></div><div class="divider-line"></div></div>
+  <p class="wish-quote reveal">
+    May this birthday be the beginning of the best year of your life. May joy find you in the quietest moments, and may you always, <em>always</em> know how deeply you are loved.
+  </p>
+  <div class="divider reveal"><div class="divider-line"></div><div class="divider-gem"></div><div class="divider-line"></div></div>
+</section>
+
+<!-- FINALE -->
+<section id="finale">
+  <h2 class="finale-title reveal">Happy Birthday 🎂</h2>
+  <p class="finale-sub reveal">Here's to you — today and every day after</p>
+  <button class="celebrate-btn reveal" onclick="celebrate()">Celebrate ✦</button>
+</section>
+
+<script>
+// ---- MUSIC ----
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx, musicActive = false, scheduleId, nextNoteTime = 0, melodyIdx = 0;
+
+// C pentatonic notes across two octaves (Hz)
+const noteFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00];
+// Romantic ascending/descending melody pattern (indices into noteFreqs)
+const melody = [4,6,7,9,7,6,4,5,4,2,4,5,6,7,6,4,3,2,0,2,3,4,6,4];
+
+function initAudio() { if (!audioCtx) audioCtx = new AudioCtx(); }
+
+function playNote(freq, when, dur) {
+  const osc  = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  // Layer a soft 2nd harmonic for warmth
+  const osc2 = audioCtx.createOscillator();
+  const g2   = audioCtx.createGain();
+  osc2.type = 'sine'; osc2.frequency.value = freq * 2;
+  g2.gain.value = 0.03;
+  osc2.connect(g2); g2.connect(audioCtx.destination);
+
+  osc.type = 'sine'; osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0, when);
+  gain.gain.linearRampToValueAtTime(0.09, when + 0.06);
+  gain.gain.linearRampToValueAtTime(0.055, when + dur * 0.55);
+  gain.gain.linearRampToValueAtTime(0, when + dur);
+  osc.connect(gain); gain.connect(audioCtx.destination);
+
+  osc.start(when); osc.stop(when + dur + 0.05);
+  osc2.start(when); osc2.stop(when + dur + 0.05);
+}
+
+function scheduleMelody() {
+  if (!musicActive) return;
+  while (nextNoteTime < audioCtx.currentTime + 0.35) {
+    const freq = noteFreqs[melody[melodyIdx % melody.length]];
+    const dur  = 0.55 + (melodyIdx % 4 === 0 ? 0.35 : 0);
+    playNote(freq, nextNoteTime, dur);
+    if (melodyIdx % 5 === 0) playNote(freq * 1.498, nextNoteTime, dur * 0.75); // perfect fifth harmony
+    nextNoteTime += dur * 0.68 + 0.08;
+    melodyIdx++;
+  }
+  scheduleId = setTimeout(scheduleMelody, 120);
+}
+
+function toggleMusic() {
+  const btn = document.getElementById('musicBtn');
+  if (!musicActive) {
+    initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    musicActive = true;
+    nextNoteTime = audioCtx.currentTime + 0.1;
+    scheduleMelody();
+    btn.classList.add('active');
+    btn.title = 'Pause music';
+  } else {
+    musicActive = false;
+    clearTimeout(scheduleId);
+    btn.classList.remove('active');
+    btn.title = 'Play music';
+  }
+}
+
+// Auto-start on first user gesture (browser policy)
+let musicStarted = false;
+function autoStart() {
+  if (musicStarted) return;
+  musicStarted = true;
+  document.removeEventListener('click',  autoStart);
+  document.removeEventListener('scroll', autoStart);
+  toggleMusic();
+}
+document.addEventListener('click',  autoStart);
+document.addEventListener('scroll', autoStart);
+
+// ---- CURSOR ----
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('button, a, .reason-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.width = '20px'; cur.style.height = '20px'; cur.style.opacity = '0.6'; });
+  el.addEventListener('mouseleave', () => { cur.style.width = '10px'; cur.style.height = '10px'; cur.style.opacity = '1'; });
+});
+
+// ---- BG PARTICLES ----
+const bgC = document.getElementById('bgCanvas');
+const bctx = bgC.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = bgC.width  = window.innerWidth;
+  H = bgC.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(); this.y = Math.random() * H; }
+  reset() {
+    this.x = Math.random() * W;
+    this.y = H + 10;
+    this.size = Math.random() * 1.8 + 0.4;
+    this.speed = Math.random() * 0.4 + 0.15;
+    this.opacity = Math.random() * 0.7 + 0.1;
+    this.drift = (Math.random() - 0.5) * 0.3;
+    this.twinkle = Math.random() * Math.PI * 2;
+  }
+  update() {
+    this.y -= this.speed;
+    this.x += this.drift;
+    this.twinkle += 0.02;
+    this.opacity = 0.3 + Math.sin(this.twinkle) * 0.3;
+    if (this.y < -10) this.reset();
+  }
+  draw() {
+    bctx.beginPath();
+    bctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    bctx.fillStyle = `rgba(212,175,110,${this.opacity})`;
+    bctx.fill();
+  }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function animBg() {
+  bctx.clearRect(0, 0, W, H);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animBg);
+}
+animBg();
+
+// ---- SCROLL REVEAL ----
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.15 });
+revealEls.forEach(el => observer.observe(el));
+
+// ---- FIREWORKS ----
+const fwC = document.getElementById('fwCanvas');
+const fwCtx = fwC.getContext('2d');
+let fireworks = [], fwActive = false, fwTimeout;
+
+function resizeFW() { fwC.width = window.innerWidth; fwC.height = window.innerHeight; }
+resizeFW();
+window.addEventListener('resize', resizeFW);
+
+class Spark {
+  constructor(x, y, color) {
+    this.x = x; this.y = y;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 5 + 2;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.alpha = 1; this.color = color;
+    this.size = Math.random() * 2.5 + 1;
+    this.decay = Math.random() * 0.015 + 0.012;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    this.vy += 0.06; this.vx *= 0.98;
+    this.alpha -= this.decay;
+  }
+  draw() {
+    fwCtx.save();
+    fwCtx.globalAlpha = this.alpha;
+    fwCtx.beginPath();
+    fwCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    fwCtx.fillStyle = this.color;
+    fwCtx.fill();
+    fwCtx.restore();
+  }
+}
+
+const fwColors = ['#d4af6e','#e8cf9a','#c9748a','#f0d090','#fff5cc','#e8a0b0','#ffffffcc'];
+
+function burst(x, y) {
+  const color = fwColors[Math.floor(Math.random() * fwColors.length)];
+  for (let i = 0; i < 80; i++) fireworks.push(new Spark(x, y, color));
+}
+
+function animFW() {
+  if (!fwActive) return;
+  fwCtx.clearRect(0, 0, fwC.width, fwC.height);
+  fireworks = fireworks.filter(f => f.alpha > 0);
+  fireworks.forEach(f => { f.update(); f.draw(); });
+  requestAnimationFrame(animFW);
+}
+
+function celebrate() {
+  fwC.style.display = 'block';
+  fwActive = true;
+  fireworks = [];
+  animFW();
+
+  let count = 0;
+  const interval = setInterval(() => {
+    burst(
+      fwC.width * (0.2 + Math.random() * 0.6),
+      fwC.height * (0.1 + Math.random() * 0.5)
+    );
+    count++;
+    if (count >= 14) clearInterval(interval);
+  }, 220);
+
+  clearTimeout(fwTimeout);
+  fwTimeout = setTimeout(() => {
+    fwActive = false;
+    fwC.style.display = 'none';
+  }, 5000);
+}
+</script>
+</body>
+</html>
