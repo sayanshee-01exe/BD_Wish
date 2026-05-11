@@ -333,26 +333,6 @@
     color: rgba(245,240,232,0.45); letter-spacing: 0.04em;
   }
 
-  /* ---- MUSIC BUTTON ---- */
-  .music-btn {
-    position: fixed; bottom: 2rem; right: 2rem;
-    width: 50px; height: 50px; border-radius: 50%;
-    background: rgba(10,7,16,0.7);
-    border: 1px solid rgba(212,175,110,0.35);
-    color: var(--gold); font-size: 1.25rem;
-    cursor: pointer; z-index: 1000;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.3s, border-color 0.3s, transform 0.2s;
-    backdrop-filter: blur(6px);
-  }
-  .music-btn:hover {
-    background: rgba(212,175,110,0.12);
-    border-color: var(--gold); transform: scale(1.1);
-  }
-  .music-btn.active { border-color: var(--gold); background: rgba(212,175,110,0.1); }
-  .music-btn.active .m-icon { animation: musicPulse 1.6s ease-in-out infinite; display: inline-block; }
-  @keyframes musicPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
-
   /* Firework canvas */
   #fwCanvas {
     position: fixed; inset: 0;
@@ -369,10 +349,6 @@
 <canvas id="bgCanvas"></canvas>
 <canvas id="fwCanvas"></canvas>
 
-<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Play music">
-  <span class="m-icon">♪</span>
-</button>
-
 <!-- HERO -->
 <section id="hero">
   <p class="pre-title">A message from the heart</p>
@@ -388,7 +364,7 @@
 <section id="photo">
   <div class="photo-frame reveal">
     <div class="photo-inner">
-      <img src="your-photo.jpg" alt="My beloved" class="beloved-photo"
+      <img src="IMG-20251123-WA0021.jpg" alt="My beloved" class="beloved-photo"
            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
       <div class="photo-placeholder">
         <span class="ph-icon">✦</span>
@@ -470,81 +446,6 @@
 </section>
 
 <script>
-// ---- MUSIC ----
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx, musicActive = false, scheduleId, nextNoteTime = 0, melodyIdx = 0;
-
-// C pentatonic notes across two octaves (Hz)
-const noteFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00];
-// Romantic ascending/descending melody pattern (indices into noteFreqs)
-const melody = [4,6,7,9,7,6,4,5,4,2,4,5,6,7,6,4,3,2,0,2,3,4,6,4];
-
-function initAudio() { if (!audioCtx) audioCtx = new AudioCtx(); }
-
-function playNote(freq, when, dur) {
-  const osc  = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-  // Layer a soft 2nd harmonic for warmth
-  const osc2 = audioCtx.createOscillator();
-  const g2   = audioCtx.createGain();
-  osc2.type = 'sine'; osc2.frequency.value = freq * 2;
-  g2.gain.value = 0.03;
-  osc2.connect(g2); g2.connect(audioCtx.destination);
-
-  osc.type = 'sine'; osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0, when);
-  gain.gain.linearRampToValueAtTime(0.09, when + 0.06);
-  gain.gain.linearRampToValueAtTime(0.055, when + dur * 0.55);
-  gain.gain.linearRampToValueAtTime(0, when + dur);
-  osc.connect(gain); gain.connect(audioCtx.destination);
-
-  osc.start(when); osc.stop(when + dur + 0.05);
-  osc2.start(when); osc2.stop(when + dur + 0.05);
-}
-
-function scheduleMelody() {
-  if (!musicActive) return;
-  while (nextNoteTime < audioCtx.currentTime + 0.35) {
-    const freq = noteFreqs[melody[melodyIdx % melody.length]];
-    const dur  = 0.55 + (melodyIdx % 4 === 0 ? 0.35 : 0);
-    playNote(freq, nextNoteTime, dur);
-    if (melodyIdx % 5 === 0) playNote(freq * 1.498, nextNoteTime, dur * 0.75); // perfect fifth harmony
-    nextNoteTime += dur * 0.68 + 0.08;
-    melodyIdx++;
-  }
-  scheduleId = setTimeout(scheduleMelody, 120);
-}
-
-function toggleMusic() {
-  const btn = document.getElementById('musicBtn');
-  if (!musicActive) {
-    initAudio();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    musicActive = true;
-    nextNoteTime = audioCtx.currentTime + 0.1;
-    scheduleMelody();
-    btn.classList.add('active');
-    btn.title = 'Pause music';
-  } else {
-    musicActive = false;
-    clearTimeout(scheduleId);
-    btn.classList.remove('active');
-    btn.title = 'Play music';
-  }
-}
-
-// Auto-start on first user gesture (browser policy)
-let musicStarted = false;
-function autoStart() {
-  if (musicStarted) return;
-  musicStarted = true;
-  document.removeEventListener('click',  autoStart);
-  document.removeEventListener('scroll', autoStart);
-  toggleMusic();
-}
-document.addEventListener('click',  autoStart);
-document.addEventListener('scroll', autoStart);
-
 // ---- CURSOR ----
 const cur = document.getElementById('cursor');
 const ring = document.getElementById('cursorRing');
